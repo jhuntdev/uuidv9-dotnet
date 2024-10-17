@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>UUIDv9</id>
+    <version>0.0.1</version>
+    <authors>jhuntdev</authors>
+    <owners>jhuntdev</owners>
+    <license type="expression">MIT</license>
+    <!-- <icon>icon.png</icon> -->
+    <projectUrl>https://uuidv9.jhunt.dev</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Fast, lightweight, zero-dependency .NET implementation of UUID version 9</description>
+    <!-- <releaseNotes></releaseNotes> -->
+    <copyright>Copyright 2024</copyright>
+    <tags>dotnet uuid v9 version 9 universally unique identifier globally guid id</tags>
+  </metadata>
+</package>
