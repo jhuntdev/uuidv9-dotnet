@@ -40,7 +40,8 @@ public static class UUIDv9
         var versionDigit = uuid[14].ToString();
         var variantDigit = uuid[19].ToString();
         return (!version.HasValue || versionDigit == version.ToString()) &&
-               (versionDigit == "9" || ("14".Contains(versionDigit) && "89abAB".Contains(variantDigit)));
+               (versionDigit == "9" || "14".Contains(versionDigit)) &&
+               "89abAB".Contains(variantDigit);
     }
 
     public static bool IsUUID(string uuid) => !string.IsNullOrEmpty(uuid) && UuidRegex.IsMatch(uuid);
@@ -79,6 +80,13 @@ public static class UUIDv9
         if (!IsBase16(prefix)) throw new ArgumentException("Prefix must be only hexadecimal characters");
     }
 
+    private static void ValidateSuffix(string suffix)
+    {
+        if (suffix == null) throw new ArgumentException("Suffix must be a string");
+        if (suffix.Length > 4) throw new ArgumentException("Suffix must be no more than 4 characters");
+        if (!IsBase16(suffix)) throw new ArgumentException("Suffix must be only hexadecimal characters");
+    }
+
     private static string AddDashes(string str)
     {
         return $"{str.Substring(0, 8)}-{str.Substring(8, 4)}-{str.Substring(12, 4)}-{str.Substring(16, 4)}-{str.Substring(20)}";
@@ -91,6 +99,7 @@ public static class UUIDv9
         public bool Checksum { get; set; }
         public bool Version { get; set; }
         public bool Legacy { get; set; }
+        public string Suffix { get; set; } = string.Empty;
     }
 
     private static T OptionOrDefault<T>(string name, UUIDv9Options options)
@@ -108,10 +117,16 @@ public static class UUIDv9
         var checksum = OptionOrDefault<bool>("Checksum", options);
         var version = OptionOrDefault<bool>("Version", options);
         var legacy = OptionOrDefault<bool>("Legacy", options);
+        var suffix = OptionOrDefault<string>("Suffix", options).ToLower();
 
         if (!string.IsNullOrEmpty(prefix))
         {
             ValidatePrefix(prefix);
+        }
+
+        if (!string.IsNullOrEmpty(suffix))
+        {
+            ValidatePrefix(suffix);
         }
 
         string center = timestamp switch
@@ -122,8 +137,9 @@ public static class UUIDv9
             _ => DateTime.Now.Ticks.ToString("x")
         };
 
-        string suffix = RandomBytes(32 - prefix.Length - center.Length - (checksum ? 2 : 0) - (legacy ? 2 : version ? 1 : 0));
-        string joined = prefix + center + suffix;
+        int randomLength = 32 - prefix.Length - suffix.Length - center.Length - (checksum ? 2 : 0) - ((legacy || version) ? 2 : 0); // (legacy ? 2 : version ? 1 : 0))
+        string random = RandomBytes(randomLength);
+        string joined = prefix + center + random + suffix;
 
         if (legacy)
         {
@@ -131,7 +147,7 @@ public static class UUIDv9
         }
         else if (version)
         {
-            joined = joined.Substring(0, 12) + '9' + joined.Substring(12);
+            joined = joined.Substring(0, 12) + '9' + joined.Substring(12, 3) + RandomChar("89ab") + joined.Substring(15); // joined.Substring(12)
         }
 
         if (checksum)

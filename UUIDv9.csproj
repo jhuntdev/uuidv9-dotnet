@@ -4,7 +4,7 @@
     <OutputType>Library</OutputType>
     <TargetFramework>net7.0</TargetFramework>
     <PackageId>UUIDv9</PackageId>
-    <Version>0.1.0</Version>
+    <Version>1.0.0</Version>
     <Authors>jhuntdev</Authors>
     <Company></Company>
     <Description>Fast, lightweight, zero-dependency .NET implementation of UUID version 9</Description>
@@ -13,7 +13,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/jhuntdev/uuid-v9</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
-    <Copyright>Copyright 2024</Copyright>
+    <Copyright>Copyright 2023-2026</Copyright>
     <PackageTags>dotnet uuid v9 version 9 universally unique identifier globally guid id</PackageTags>
   </PropertyGroup>
 
