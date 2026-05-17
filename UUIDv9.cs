@@ -39,9 +39,7 @@ public static class UUIDv9
     {
         var versionDigit = uuid[14].ToString();
         var variantDigit = uuid[19].ToString();
-        return (!version.HasValue || versionDigit == version.ToString()) &&
-               (versionDigit == "9" || "14".Contains(versionDigit)) &&
-               "89abAB".Contains(variantDigit);
+        return !version.HasValue || (versionDigit == version.ToString() && "89abAB".Contains(variantDigit));
     }
 
     public static bool IsUUID(string uuid) => !string.IsNullOrEmpty(uuid) && UuidRegex.IsMatch(uuid);
@@ -126,7 +124,7 @@ public static class UUIDv9
 
         if (!string.IsNullOrEmpty(suffix))
         {
-            ValidatePrefix(suffix);
+            ValidateSuffix(suffix);
         }
 
         string center = timestamp switch
